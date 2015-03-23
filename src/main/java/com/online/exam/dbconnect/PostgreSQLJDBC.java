@@ -11,7 +11,7 @@ public class PostgreSQLJDBC {
 			SQLException {
 		Class.forName("org.postgresql.Driver");
 		Connection conn = DriverManager.getConnection(
-				"jdbc:postgresql://leadonlinetestseries.com/gateonline", "vamshi",
+				"jdbc:postgresql://", "vamshi",
 				"vamshi");
 		
 //		Connection conn = DriverManager.getConnection(
