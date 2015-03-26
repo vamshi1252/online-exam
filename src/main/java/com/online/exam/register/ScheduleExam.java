@@ -21,20 +21,21 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.inmobi.online.dto.Branch;
 import com.inmobi.online.dto.Student;
+import com.online.exam.dao.impl.ExamDaoImpl;
 import com.online.exam.dbconnect.PostgreSQLJDBC;
+import com.online.exam.entity.Exam;
+import com.online.exam.entity.StartExam;
 import com.online.exam.entity.StudentAnswer;
 import com.online.exam.entity.TestConnection;
 import com.online.exam.response.Response;
 
-public class Register extends HttpServlet {
+public class ScheduleExam extends HttpServlet {
 
 	/**
 	 * 
@@ -44,9 +45,9 @@ public class Register extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String CONTENT_TYPE = "text/json";
-	
-	private static GsonBuilder builder = new GsonBuilder();
-	
+	private static final String CONTENT = "pong";
+	private List<String> responses = new ArrayList<String>();
+
 	Connection conn = null;
 	Statement stmt = null;
 
@@ -54,76 +55,59 @@ public class Register extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String loginId = req.getParameter("id");
-		String passWord = req.getParameter("pwd");
-		
+		String loginId = req.getParameter("sid");
+		String subjectId = req.getParameter("subid");
+
 		final PrintWriter writer = resp.getWriter();
 		resp.setStatus(HttpServletResponse.SC_OK);
 		resp.setHeader("Cache-Control", "must-revalidate,no-cache,no-store");
 		resp.setContentType(CONTENT_TYPE);
 
+		/*
+		 * testing hibernate
+		 */
+
 		try {
-			if (StringUtils.isEmpty(loginId) || StringUtils.isEmpty(passWord)) {
-				log("username || password is null");
-				String reponse = createResponse("401", null);
-				writer.println(reponse);
+			if (StringUtils.isEmpty(loginId) || StringUtils.isEmpty(subjectId)) {
+				log("username || subid is null");
+				writer.println("Error: loginId or subid empty");
 			} else {
 				HttpSession hs = req.getSession(true);
-//				if(hs.getAttribute("loginId") == null) {
-//					writer.println("Info: New Session");
-//				} else {
-//					writer.println("Hi " + hs.getAttribute("loginId"));
-//				}
-					
-				
-				Student student = getStudentDetails(loginId, passWord);
-				if (student == null) {
+				// if(hs.getAttribute("loginId") == null) {
+				// writer.println("Error: SessionExpired");
+				// } else {
+
+				Exam  exam = startExam(loginId, subjectId);
+				if (exam == null) {
 					log("Invalid username || password ");
 					String reponse = createResponse("401", null);
 					writer.println(reponse);
 				} else {
-					String reponse = createResponse("200", student);
+					String reponse = createResponse("200", exam);
 					writer.println(reponse);
-					hs.setAttribute("loginId", loginId);
 				}
+				// }
 			}
 		} finally {
 			writer.close();
 		}
 	}
 
-	private Student getStudentDetails(String loginId, String passWord) {
+	private Exam startExam(String sid, String subid) {
 
-		Student student = new Student();
-		try {
-			conn = PostgreSQLJDBC.getConnection();
-			stmt = conn.createStatement();
-			String query = String.format(studentInfo, "'" + loginId + "'", "'"
-					+ passWord + "'");
-			ResultSet rs = stmt.executeQuery(query);
+		StartExam startExam = new StartExam();
+		startExam.setSid(sid);
+		startExam.setSubject(subid);
+		startExam.setStatus(1);
+		int result = ExamDaoImpl.startExam(startExam);
 
-			if (rs == null)
-				return null;
-
-			while (rs.next()) {
-				student.setId(rs.getString("id"));
-				student.setName(rs.getString("name"));
-				student.setInstitue(rs.getString("institute"));
-				student.setEmailId(rs.getString("emailid"));
-				student.setBranch(Branch.findByValue(rs.getInt("branch")));
-				student.setMobile(rs.getString("mobile"));
-			}
-
-			stmt.close();
-			conn.close();
-			
-			return student;
-
-		} catch (ClassNotFoundException e) {
-			return null;
-		} catch (SQLException e) {
-			return null;
+		if (result == 1) {
+			// get ExamDetails
+			Exam exam = ExamDaoImpl.getExamDetails(sid, subid);
+			return exam;
 		}
+
+		return null;
 	}
 
 	private String  convertToJson(Object obj) {
@@ -139,9 +123,5 @@ public class Register extends HttpServlet {
 	
 		return convertToJson(response);
 	}
-	
-	
-	
-	
-	
+
 }
