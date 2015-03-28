@@ -26,7 +26,6 @@ public class StartExam implements Serializable {
 	@Column(name = "id")
 	private String sid;
 
-	@Id
 	@Column(name = "institute")
 	private String institue;
 
@@ -48,6 +47,10 @@ public class StartExam implements Serializable {
 	
 	@Column(name = "status")
 	private  int  status;
+	
+	@Column(name = "answers")
+	private  String  answers;
+	
 	
 }
 

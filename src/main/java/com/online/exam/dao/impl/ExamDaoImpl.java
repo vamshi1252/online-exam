@@ -39,6 +39,54 @@ public  class ExamDaoImpl /*implements ExamDao */{
 		} 
 		return 0;
 	}
+	
+	
+	public  static int updateAnswer(String  sid, String subid, String answers) {
+		Session session = HibernateSessionFactory.getInstance().getSession();
+		Transaction tx = null;
+		try {
+			
+			StartExam startExam = getStudentExamDetails(sid, subid);
+			startExam.setAnswers(answers);
+			tx = session.beginTransaction();
+			
+			session.update(startExam);
+			tx.commit();
+			
+			return 1;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} 
+		return 0;
+	}
+	
+	
+	public  static int stopExam(String  sid, String subid) {
+		Session session = HibernateSessionFactory.getInstance().getSession();
+		Transaction tx = null;
+		try {
+			
+			
+			
+			StartExam startExam = getStudentExamDetails(sid, subid);
+			startExam.setStatus(2);
+			tx = session.beginTransaction();
+			
+			session.update(startExam);
+			tx.commit();
+			
+			return 1;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} 
+		return 0;
+	}
+	
+	
 
 //	@Override
 	public static void recordAnswer(StudentAnswer studentAnswer) {
@@ -60,7 +108,7 @@ public  class ExamDaoImpl /*implements ExamDao */{
 	}
 
 //	@Override
-	public static Exam getExamDetails(String studentId, String subid) {
+	public static Exam getExamDetails(String subid) {
 		
 		Session session = HibernateSessionFactory.getInstance().getSession();
 		Transaction tx = null;
@@ -84,7 +132,7 @@ public  class ExamDaoImpl /*implements ExamDao */{
 	}
 
 //	@Override
-	public static long getStudentExamDetails(String studentId, String subid) {
+	public static StartExam getStudentExamDetails(String studentId, String subid) {
 
 		Session session = HibernateSessionFactory.getInstance().getSession();
 		Transaction tx = null;
@@ -92,20 +140,20 @@ public  class ExamDaoImpl /*implements ExamDao */{
 			tx = session.beginTransaction();
 
 			Criteria criteria = session.createCriteria(StartExam.class);
-			criteria.add(Restrictions.eq("id", studentId));
+			criteria.add(Restrictions.eq("sid", studentId));
 			criteria.add(Restrictions.eq("subject", subid));
 
 			StartExam sa = (StartExam) criteria.uniqueResult();
-			System.out.println(sa);
+//			System.out.println(sa);
 			tx.commit();
+			return sa;
 		} catch (RuntimeException e) {
 			if (tx != null)
 				tx.rollback();
+			session.close();
+			session = null;
 			throw e; // or display error message
 		}
-
-		return 0;
-
 	}
 
 //	@Override

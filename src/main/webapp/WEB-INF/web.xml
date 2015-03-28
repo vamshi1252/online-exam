@@ -48,12 +48,27 @@
 		<servlet-class>com.online.exam.register.Register</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
-	
-		<servlet>
+
+	<servlet>
 		<servlet-name>ScheduleExamServlet</servlet-name>
 		<servlet-class>com.online.exam.register.ScheduleExam</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>SubmitAnswerServlet</servlet-name>
+		<servlet-class>com.online.exam.register.SubmitAnswer</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ExamDetailsServlet</servlet-name>
+		<servlet-class>com.online.exam.register.ExamDetails</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+
+
+
 
 	<servlet>
 		<servlet-name>PromoCodeCronSerlvet</servlet-name>
@@ -66,6 +81,12 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+
+
+
+
+
 
 	<servlet-mapping>
 		<servlet-name>PromoCodeCronSerlvet</servlet-name>
@@ -95,6 +116,17 @@
 	<servlet-mapping>
 		<servlet-name>ScheduleExamServlet</servlet-name>
 		<url-pattern>/startExam</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SubmitAnswerServlet</servlet-name>
+		<url-pattern>/submitAnswer</url-pattern>
+	</servlet-mapping>
+	
+	
+		<servlet-mapping>
+		<servlet-name>ExamDetailsServlet</servlet-name>
+		<url-pattern>/examDetails</url-pattern>
 	</servlet-mapping>
 
 

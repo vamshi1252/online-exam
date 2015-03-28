@@ -18,7 +18,7 @@ public class HibernateSessionFactory {
 	}
 
 	public  Session getSession() {
-		if (session == null) {
+		if (session == null) {	
 			session = getSessionFactory().openSession();
 		}
 		return session;

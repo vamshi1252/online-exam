@@ -43,6 +43,8 @@ public class Exam implements Serializable {
 	
 	@Column(name = "status")
 	private  int  status;
+	
+	//private int marks;
 }
 
 

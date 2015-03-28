@@ -19,12 +19,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.online.exam.dao.impl.ExamDaoImpl;
 import com.online.exam.entity.Exam;
+import com.online.exam.entity.ExamInfo;
 import com.online.exam.entity.QuestionAnswer;
 import com.online.exam.entity.QuestionAnswerList;
 import com.online.exam.entity.StartExam;
 import com.online.exam.response.AnswersResponse;
 
-public class ScheduleExam extends HttpServlet {
+public class ExamDetails extends HttpServlet {
 
 	/**
 	 * 
@@ -40,7 +41,6 @@ public class ScheduleExam extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String loginId = req.getParameter("sid");
 		String subjectId = req.getParameter("subid");
 
 		final PrintWriter writer = resp.getWriter();
@@ -53,8 +53,8 @@ public class ScheduleExam extends HttpServlet {
 		 */
 
 		try {
-			if (StringUtils.isEmpty(loginId) || StringUtils.isEmpty(subjectId)) {
-				log("username || subid is null");
+			if (StringUtils.isEmpty(subjectId)) {
+				log("subid is null");
 				resp.setStatus(401);
 				writer.println("Error: Unauthorized... login again");
 			} else {
@@ -63,13 +63,14 @@ public class ScheduleExam extends HttpServlet {
 				// writer.println("Error: SessionExpired");
 				// } else {
 
-				String answers = startExam(loginId, subjectId);
-				if (answers == null) {
-					log("Invalid username || password ");
+				String examDetails = getExamDetails(subjectId);
+				if (examDetails == null) {
+					log("Invalid subid");
 					String reponse = createResponse("");
 					writer.println(reponse);
+					resp.setStatus(401);
 				} else {
-					String reponse = answers;
+					String reponse = examDetails;
 					writer.println(reponse);
 				}
 				// }
@@ -79,27 +80,17 @@ public class ScheduleExam extends HttpServlet {
 		}
 	}
 
-	private String startExam(String sid, String subid) {
-		StartExam startExam;
-
-		startExam = ExamDaoImpl.getStudentExamDetails(sid, subid);
-		if (startExam != null) {
-			return startExam.getAnswers();
-		}
-
-		startExam = new StartExam();
-		startExam.setSid(sid);
-		startExam.setSubject(subid);
-		startExam.setStatus(1);
+	private String getExamDetails(String subid) {
 
 		Exam exam = ExamDaoImpl.getExamDetails(subid);
-		String answers = getAnswersJson(exam.getNoOfQuestions());
+//		exam.setMarks(30);
+		ExamInfo examInfo = new ExamInfo();
+		examInfo.setStart_time(exam.getTimeMinutes());
+		examInfo.setCurr_time(System.currentTimeMillis());
+		examInfo.setTotime(totime);
 
-		startExam.setAnswers(answers);
-
-		int result = ExamDaoImpl.startExam(startExam);
-
-		return answers;
+		String examDetails = convertToJson(exam);
+		return examDetails;
 	}
 
 	private String convertToJson(Object obj) {
@@ -113,19 +104,6 @@ public class ScheduleExam extends HttpServlet {
 		response.setQuestions(status);
 
 		return convertToJson(response);
-	}
-
-	private String getAnswersJson(int n) {
-		QuestionAnswer[] qa = new QuestionAnswer[n];
-
-		for (int i = 0; i < n; i++) {
-			qa[i] = new QuestionAnswer();
-			qa[i].id = i + 1;
-		}
-
-		QuestionAnswerList questionAnswerList = new QuestionAnswerList();
-		questionAnswerList.setQuestions(qa);
-		return convertToJson(questionAnswerList);
 	}
 
 }
