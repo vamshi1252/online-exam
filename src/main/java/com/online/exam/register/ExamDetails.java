@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +35,16 @@ public class ExamDetails extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String CONTENT_TYPE = "text/json";
+	
+	
+	private static Map<Integer, String> mp = new HashMap<Integer, String>();
+	static	{
+	mp.put(1, "CS");
+	mp.put(2, "EC");
+	mp.put(3, "EE");
+	mp.put(4, "CI");
+	mp.put(5, "ME");
+	}
 
 	Connection conn = null;
 	Statement stmt = null;
@@ -59,11 +71,11 @@ public class ExamDetails extends HttpServlet {
 				writer.println("Error: Unauthorized... login again");
 			} else {
 				HttpSession hs = req.getSession(true);
-				// if(hs.getAttribute("loginId") == null) {
-				// writer.println("Error: SessionExpired");
-				// } else {
+				 if(hs.getAttribute("loginId") == null) {
+				 writer.println("Error: SessionExpired");
+				 } else {
 
-				String examDetails = getExamDetails(subjectId);
+				String examDetails = getExamDetails((String)hs.getAttribute("loginId"),subjectId);
 				if (examDetails == null) {
 					log("Invalid subid");
 					String reponse = createResponse("");
@@ -73,23 +85,32 @@ public class ExamDetails extends HttpServlet {
 					String reponse = examDetails;
 					writer.println(reponse);
 				}
-				// }
+				 }
 			}
 		} finally {
 			writer.close();
 		}
 	}
 
-	private String getExamDetails(String subid) {
+	private String getExamDetails(String studentId, String subid) {
 
 		Exam exam = ExamDaoImpl.getExamDetails(subid);
+		StartExam startExam = ExamDaoImpl.getStudentExamDetails(studentId, subid);
 //		exam.setMarks(30);
 		ExamInfo examInfo = new ExamInfo();
-		examInfo.setStart_time(exam.getTimeMinutes());
+		examInfo.setBranch(mp.get(exam.getBranch()));
+		examInfo.setSubject(subid);
+		examInfo.setUsername(studentId);
+		examInfo.setQtype(mp.get(exam.getBranch()), subid);
+		if(startExam ==  null) {
+			examInfo.setStart_time(System.currentTimeMillis());
+		} else {
+		examInfo.setStart_time(startExam.getTimeStarted());
+		}
 		examInfo.setCurr_time(System.currentTimeMillis());
-		examInfo.setTotime(totime);
+		examInfo.setTotime(exam.getTimeMinutes()*60*1000);
 
-		String examDetails = convertToJson(exam);
+		String examDetails = convertToJson(examInfo);
 		return examDetails;
 	}
 

@@ -62,10 +62,4 @@
         </property>
     </bean>
     
-    
-       	<bean id="testConnection" class="com.online.exam.entity.TestConnection">
-       		<property name="sessionFactory" ref="sessionFactory" />
-       	</bean>
-    
-    
     </beans>

@@ -57,12 +57,6 @@ public class Register extends HttpServlet {
 				writer.println(reponse);
 			} else {
 				HttpSession hs = req.getSession(true);
-//				if(hs.getAttribute("loginId") == null) {
-//					writer.println("Info: New Session");
-//				} else {
-//					writer.println("Hi " + hs.getAttribute("loginId"));
-//				}
-					
 				
 				Student student = getStudentDetails(loginId, passWord);
 				if (student == null) {

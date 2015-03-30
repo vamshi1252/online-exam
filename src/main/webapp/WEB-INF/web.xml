@@ -66,6 +66,18 @@
 		<servlet-class>com.online.exam.register.ExamDetails</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
+	
+		<servlet>
+		<servlet-name>EligibleExamsServlet</servlet-name>
+		<servlet-class>com.online.exam.register.EligibleExams</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>StopExamServlet</servlet-name>
+		<servlet-class>com.online.exam.register.StopExam</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
 
 
 
@@ -81,11 +93,6 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
-
-
-
-
 
 
 	<servlet-mapping>
@@ -122,14 +129,23 @@
 		<servlet-name>SubmitAnswerServlet</servlet-name>
 		<url-pattern>/submitAnswer</url-pattern>
 	</servlet-mapping>
-	
-	
-		<servlet-mapping>
+
+
+	<servlet-mapping>
 		<servlet-name>ExamDetailsServlet</servlet-name>
 		<url-pattern>/examDetails</url-pattern>
 	</servlet-mapping>
-
-
+	
+	
+		<servlet-mapping>
+		<servlet-name>EligibleExamsServlet</servlet-name>
+		<url-pattern>/eligibleExams</url-pattern>
+	</servlet-mapping>
+	
+		<servlet-mapping>
+		<servlet-name>StopExamServlet</servlet-name>
+		<url-pattern>/stopExam</url-pattern>
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

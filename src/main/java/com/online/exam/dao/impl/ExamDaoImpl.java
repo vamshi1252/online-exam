@@ -1,10 +1,13 @@
 package com.online.exam.dao.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.online.exam.dao.ExamDao;
@@ -87,25 +90,25 @@ public  class ExamDaoImpl /*implements ExamDao */{
 	}
 	
 	
-
-//	@Override
-	public static void recordAnswer(StudentAnswer studentAnswer) {
-		Session session = HibernateSessionFactory.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-
-			Criteria criteria = session.createCriteria(StudentAnswer.class);
-			criteria.add(Restrictions.eq("sid", "1225"));
-			StudentAnswer sa = (StudentAnswer) criteria.uniqueResult();
-			System.out.println(sa);
-			tx.commit();
-		} catch (RuntimeException e) {
-			if (tx != null)
-				tx.rollback();
-			throw e; // or display error message
-		}
-	}
+//
+////	@Override
+//	public static void recordAnswer(StudentAnswer studentAnswer) {
+//		Session session = HibernateSessionFactory.getInstance().getSession();
+//		Transaction tx = null;
+//		try {
+//			tx = session.beginTransaction();
+//
+//			Criteria criteria = session.createCriteria(StudentAnswer.class);
+//			criteria.add(Restrictions.eq("sid", "1225"));
+//			StudentAnswer sa = (StudentAnswer) criteria.uniqueResult();
+//			System.out.println(sa);
+//			tx.commit();
+//		} catch (RuntimeException e) {
+//			if (tx != null)
+//				tx.rollback();
+//			throw e; // or display error message
+//		}
+//	}
 
 //	@Override
 	public static Exam getExamDetails(String subid) {
@@ -116,7 +119,7 @@ public  class ExamDaoImpl /*implements ExamDao */{
 			tx = session.beginTransaction();
 
 			Criteria criteria = session.createCriteria(Exam.class);
-			criteria.add(Restrictions.eq("subid", "OS"));
+			criteria.add(Restrictions.eq("subid", subid));
 			Exam exam = (Exam) criteria.uniqueResult();
 			System.out.println(exam);
 			tx.commit();
@@ -127,9 +130,36 @@ public  class ExamDaoImpl /*implements ExamDao */{
 				tx.rollback();
 			throw e; // or display error message
 		}
-		
-
 	}
+	
+	public static List<Exam> getExamDetailsById(int branchId) {
+		
+		Session session = HibernateSessionFactory.getInstance().getSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+
+			Criteria criteria = session.createCriteria(Exam.class);
+			criteria.add(Restrictions.eq("branch", branchId));
+			criteria.addOrder(Order.asc("subject"));
+			List<Exam> examList =  criteria.list();
+			System.out.println(examList);
+			tx.commit();
+			
+			return examList;
+		} catch (RuntimeException e) {
+			if (tx != null)
+				tx.rollback();
+			session.close();
+			session = null;
+			throw e; // or display error message
+		}
+	}
+	
+	
+	
+	
+	
 
 //	@Override
 	public static StartExam getStudentExamDetails(String studentId, String subid) {
@@ -155,6 +185,32 @@ public  class ExamDaoImpl /*implements ExamDao */{
 			throw e; // or display error message
 		}
 	}
+	
+	
+//	@Override
+	public static List<StartExam> getStudentExamDetailsById(String studentId) {
+
+		Session session = HibernateSessionFactory.getInstance().getSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+
+			Criteria criteria = session.createCriteria(StartExam.class);
+			criteria.add(Restrictions.eq("sid", studentId));
+
+			List<StartExam> startExamList =  criteria.list();
+//			System.out.println(sa);
+			tx.commit();
+			return startExamList;
+		} catch (RuntimeException e) {
+			if (tx != null)
+				tx.rollback();
+			session.close();
+			session = null;
+			throw e; // or display error message
+		}
+	}
+	
 
 //	@Override
 	public void startExam(String studentId, String subid) {

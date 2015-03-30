@@ -21,7 +21,7 @@ public class Exam implements Serializable {
 
 	@Id
 	@Column(name = "branch")
-	private String branch;
+	private int branch;
 
 	
 	@Column(name = "sid")
@@ -44,7 +44,8 @@ public class Exam implements Serializable {
 	@Column(name = "status")
 	private  int  status;
 	
-	//private int marks;
+	@Column(name = "marks")
+	private double marks;
 }
 
 
