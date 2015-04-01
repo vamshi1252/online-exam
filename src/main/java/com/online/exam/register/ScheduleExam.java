@@ -90,7 +90,7 @@ public class ScheduleExam extends HttpServlet {
 		startExam = new StartExam();
 		startExam.setSid(sid);
 		startExam.setSubject(subid);
-		startExam.setStatus(1);
+		startExam.setStatus(3); // Exam in progress
 
 		Exam exam = ExamDaoImpl.getExamDetails(subid);
 		String answers = getAnswersJson(exam.getNoOfQuestions());

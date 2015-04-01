@@ -66,7 +66,7 @@ public  class ExamDaoImpl /*implements ExamDao */{
 	}
 	
 	
-	public  static int stopExam(String  sid, String subid) {
+	public  static StartExam stopExam(String  sid, String subid) {
 		Session session = HibernateSessionFactory.getInstance().getSession();
 		Transaction tx = null;
 		try {
@@ -74,19 +74,21 @@ public  class ExamDaoImpl /*implements ExamDao */{
 			
 			
 			StartExam startExam = getStudentExamDetails(sid, subid);
-			startExam.setStatus(2);
+			startExam.setStatus(4); //exam taken
 			tx = session.beginTransaction();
 			
 			session.update(startExam);
 			tx.commit();
 			
-			return 1;
+			return startExam;
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
+			session.close();
+			session = null;
 			e.printStackTrace();
 		} 
-		return 0;
+		return null;
 	}
 	
 	

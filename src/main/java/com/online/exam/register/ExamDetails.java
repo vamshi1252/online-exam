@@ -42,7 +42,7 @@ public class ExamDetails extends HttpServlet {
 	mp.put(1, "CS");
 	mp.put(2, "EC");
 	mp.put(3, "EE");
-	mp.put(4, "CI");
+	mp.put(4, "CE");
 	mp.put(5, "ME");
 	}
 

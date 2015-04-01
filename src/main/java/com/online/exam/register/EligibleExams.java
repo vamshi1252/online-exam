@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import lombok.Data;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
@@ -33,15 +35,12 @@ public class EligibleExams extends HttpServlet {
 
 	private static Map<String, Integer> reverseMap = new HashMap<String, Integer>();
 	static {
-		reverseMap.put("CSE", 1);
+		reverseMap.put("CS", 1);
 		reverseMap.put("EC", 2);
 		reverseMap.put("EE", 3);
-		reverseMap.put("CI", 4);
+		reverseMap.put("CE", 4);
 		reverseMap.put("ME", 5);
-		reverseMap.put("CS", 1);
 	}
-	
-	
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -90,11 +89,13 @@ public class EligibleExams extends HttpServlet {
 		List<StartExam> startExamList = ExamDaoImpl
 				.getStudentExamDetailsById(studentId);
 
-		Map<String, Double> examTaken = new HashMap<String, Double>();
+		Map<String, StudentExamTiming> examTaken = new HashMap<String, StudentExamTiming>();
 		for (StartExam startExam : startExamList) {
 			String subid = startExam.getSubject();
 			Double marks = startExam.getMarks();
-			examTaken.put(subid, marks);
+			long time = startExam.getTimeStarted();
+
+			examTaken.put(subid, new StudentExamTiming(marks, time));
 		}
 
 		int totalExams = examList.size();
@@ -110,10 +111,18 @@ public class EligibleExams extends HttpServlet {
 			eligibleExams[i].setTotalMarks(exam.getMarks());
 
 			if (examTaken.containsKey(exam.getSubid())) {
-				eligibleExams[i].setStatus(3); // 1 = not active, 2 =
-												// Active(TakeExam) 3 = Taken 4
-												// = expired
-				eligibleExams[i].setMarksScored(examTaken.get(exam.getSubid()));
+				/*
+				 * check for exam expired
+				 */
+				long examTimeInMillis = eligibleExams[i].getTimeInMinutes() * 60 * 1000;
+				StudentExamTiming studentExamTiming = examTaken.get(exam
+						.getSubid());
+				boolean expired = (System.currentTimeMillis() - studentExamTiming
+						.getExamStarted()) > examTimeInMillis;
+				// 1 = not active // 2 = Active(TakeExam) 3 = Take Exam 4= Taken  5 = expired
+				eligibleExams[i].setStatus(expired ? 4 : 3); 
+				
+				eligibleExams[i].setMarksScored(studentExamTiming.getMarks());
 			} else {
 				eligibleExams[i].setStatus(exam.getStatus());
 			}
@@ -131,6 +140,18 @@ public class EligibleExams extends HttpServlet {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		return gson.toJson(obj);
+	}
+
+}
+
+@Data
+class StudentExamTiming {
+	private double marks;
+	private long examStarted;
+
+	public StudentExamTiming(double marks, long examStarted) {
+		this.marks = marks;
+		this.examStarted = examStarted;
 	}
 
 }

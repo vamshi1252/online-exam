@@ -94,6 +94,7 @@ public class Register extends HttpServlet {
 				student.setEmailId(rs.getString("emailid"));
 				student.setBranch(Branch.findByValue(rs.getInt("branch")));
 				student.setMobile(rs.getString("mobile"));
+				student.setYear("16");
 			}
 
 			stmt.close();

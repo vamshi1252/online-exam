@@ -21,4 +21,6 @@ private String institue;
 
 private Branch branch;
 
+private String year;
+
 }

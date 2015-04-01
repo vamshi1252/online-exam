@@ -51,6 +51,5 @@ public class StartExam implements Serializable {
 	@Column(name = "answers")
 	private  String  answers;
 	
-	
 }
 

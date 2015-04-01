@@ -6,7 +6,7 @@ package com.inmobi.online.dto;
 
 public enum Branch {
 
-	CSE(1), ECE(2), EEE(3), CIVIL(4), MECH(5);
+	CS(1), EC(2), EE(3), CE(4), ME(5);
 
 	private int id;
 
@@ -21,15 +21,15 @@ public enum Branch {
 	public static Branch findByValue(int value) {
 		switch(value) {
 		case 1:
-    		return CSE;
+    		return CS;
 		case 2:
-    		return CSE;
+    		return EC;
 		case 3:
-    		return CSE;
+    		return EE;
 		case 4:
-    		return CSE;
+    		return CE;
 		case 5:
-    		return CSE;
+    		return ME;
     	default :
     		return null;
 		}

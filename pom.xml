@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.online.exam</groupId>
-  <artifactId>online-exam</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
+	<groupId>com.online.exam</groupId>
+	<artifactId>online-exam</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 
-  <name>online-exam</name>
-  <url>http://maven.apache.org</url>
+	<name>online-exam</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 
-   	<repositories>
+	<repositories>
 		<repository>
 			<id>releases</id>
 			<name>Releases</name>
@@ -70,7 +70,7 @@
 			</plugin>
 		</plugins>
 	</build>
-  <dependencies>
+	<dependencies>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -97,7 +97,7 @@
 			<version>9.1-901.jdbc4</version>
 			<type>jar</type>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>com.yammer.metrics</groupId>
 			<artifactId>metrics-core</artifactId>
@@ -108,9 +108,9 @@
 			<artifactId>metrics-servlet</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-		
-		
-				<!-- Spring dependencies -->
+
+
+		<!-- Spring dependencies -->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -135,17 +135,17 @@
 			<artifactId>aspectjrt</artifactId>
 			<version>1.6.12</version>
 		</dependency>
-		
 
 
-		
-				<!--  Lombok dependency -->
+
+
+		<!-- Lombok dependency -->
 		<dependency>
-		<groupId>org.projectlombok</groupId>
-		<artifactId>lombok</artifactId>
-		<version>1.16.0</version>
-		<scope>provided</scope>
-	</dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.0</version>
+			<scope>provided</scope>
+		</dependency>
 
 
 		<!-- This version of the jar is essential for array insert See http://osdir.com/ml/user-commons-apache/2009-12/msg00058.html -->
@@ -216,43 +216,39 @@
 			<artifactId>velocity-tools</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
-		<!--  Jersey --> 
-		 <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>1.9</version>
-        </dependency>
-        
-        		<!-- Spring 3 dependencies -->
-	  	<dependency>
+
+		<!-- Jersey -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<!-- Spring 3 dependencies -->
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>3.1.1.RELEASE</version>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>3.1.1.RELEASE</version>
 		</dependency>
- 
- <!--
+
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-web</artifactId> 
+			<version>3.0.5.RELEASE</version> </dependency> -->
+
+		<!-- Jackson dependency -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency> -->
- 
-        <!--  Jackson dependency -->
-	<dependency>
-		<groupId>org.codehaus.jackson</groupId>
-		<artifactId>jackson-mapper-asl</artifactId>
-		<version>1.9.13</version>
-	</dependency>
-        
-        
-        		<!-- Jersey + Spring -->
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+
+
+		<!-- Jersey + Spring -->
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-spring</artifactId>
@@ -280,8 +276,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
-				<!-- Hibernate dependencies -->
+
+		<!-- Hibernate dependencies -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -294,13 +290,21 @@
 			<version>2.2.2</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>4.1.0.Final</version>
 		</dependency>
-		
+
+		<!-- Charts dependency -->
+		<dependency>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.13</version>
+		</dependency>
+
+
 	</dependencies>
-    
+
 </project>
