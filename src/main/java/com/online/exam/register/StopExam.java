@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.online.exam.dao.impl.ExamDaoImpl;
 import com.online.exam.entity.Answer;
 import com.online.exam.entity.AnswerList;
+import com.online.exam.entity.Exam;
 import com.online.exam.entity.QuestionAnswer;
 import com.online.exam.entity.QuestionAnswerList;
 import com.online.exam.entity.StartExam;
@@ -78,7 +80,8 @@ public class StopExam extends HttpServlet {
 	private String stopExam(String sid, String subid) {
 		StartExam startExam = ExamDaoImpl.stopExam(sid, subid);
 		String studentAnswers = startExam.getAnswers();
-		String options = getAnswers(subid);
+		 Exam exam = ExamDaoImpl.getExamDetails(subid);//getAnswers(subid);
+		 String options = exam.getAnswers();
 		try {
 			return computeMarks(options, studentAnswers);
 		} catch (Exception e) {
@@ -88,23 +91,23 @@ public class StopExam extends HttpServlet {
 		return null;
 	}
 
-	private String getAnswers(String subid) {
-		Answer[] answers = new Answer[15];
-		for (int i = 0; i < 15; i++) {
-			answers[i] = new Answer();
-			answers[i].setAnswer("A");
-			answers[i].setMarks(2);
-			answers[i].setNegativeMarks(0.667);
-			answers[i].setQid(i + 1);
-			answers[i].setSubId("TEST");
-			answers[i].setType(1);
-		}
-
-		AnswerList answerList = new AnswerList();
-		answerList.setAnswerList(answers);
-
-		return convertToJson(answerList);
-	}
+//	private String getAnswers(String subid) {
+//		Answer[] answers = new Answer[15];
+//		for (int i = 0; i < 15; i++) {
+//			answers[i] = new Answer();
+//			answers[i].setAnswer("A");
+//			answers[i].setMarks(2);
+//			answers[i].setNegativeMarks(0.667);
+//			answers[i].setQid(i + 1);
+//			answers[i].setSubId("TEST");
+//			answers[i].setType(1);
+//		}
+//
+//		AnswerList answerList = new AnswerList();
+//		answerList.setAnswerList(answers);
+//
+//		return convertToJson(answerList);
+//	}
 
 	private String computeMarks(String options, String studentAnswers)
 			throws Exception {
@@ -130,7 +133,7 @@ public class StopExam extends HttpServlet {
 		}
 
 		double marks = 0.0;
-		float correct=0.0f; float incorrect =0.0f;
+		int correct=0; int incorrect =0;
 		
 		StringBuilder tableString = new StringBuilder();
 		
@@ -144,9 +147,9 @@ public class StopExam extends HttpServlet {
 
 			if ("answered".equalsIgnoreCase(status)) {
 				
-				tableString.append("<td>" + qAnswer[i].getOption() + "</td>");
+				tableString.append("<td>" + qAnswer[i].getOptions() + "</td>");
 
-				if (qAnswer[i].getOption().equalsIgnoreCase(answer[i].getAnswer())) {
+				if (qAnswer[i].getOptions().equalsIgnoreCase(answer[i].getAnswer())) {
 					correct++;
 					tableString.append("<td><img src = \"http://leadonlinetestseries.com/images/correct.jpeg\" width=30 height=30> </td>");
 					marks = marks + answer[i].getMarks();
@@ -193,7 +196,10 @@ public class StopExam extends HttpServlet {
 			//
 			tableString.append("</tr>");
 		}
-		tableString.append("<tr><td colspan=2 align=right><b>Accuracy = " + correct/answeredCounter +  "</b></td>");
+		DecimalFormat twoDForm = new DecimalFormat("#.##");
+		marks = Double.valueOf(twoDForm.format(marks));
+		Double accuracy = Double.valueOf(twoDForm.format(((float)correct/answeredCounter)*100));
+		tableString.append("<tr><td colspan=2 align=right><b>Accuracy= " + correct + "/" +  answeredCounter + "= "+ accuracy +  "%</b></td>");
 		tableString.append("<td colspan=3 align=right><b>Marks Scored = " + marks +  "</b></td></tr>");
 
 		return tableString.toString();

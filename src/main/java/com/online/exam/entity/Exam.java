@@ -46,6 +46,11 @@ public class Exam implements Serializable {
 	
 	@Column(name = "marks")
 	private double marks;
+	
+	@Column(name = "answers")
+	private String answers;
+	
+	
 }
 
 

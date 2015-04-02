@@ -11,11 +11,11 @@ public class QuestionAnswer {
 	
 	public int id;
 	public String status;
-	public String option;
+	public String options;
 	
 	public QuestionAnswer() {
 		this.status = "not_visited";
-		this.option = "undefined";
+		this.options = "undefined";
 	}
 	
 }	
