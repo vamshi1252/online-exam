@@ -34,7 +34,7 @@
 	
 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://leadonlinetestseries.com/gateonline"/>
+        <property name="url" value="jdbc:postgresql://abc.com/gateonline"/>
         <property name="username" value="vamshi"/>
         <property name="password" value="vamshi"/>
         <property name="maxActive" value="100"/>
